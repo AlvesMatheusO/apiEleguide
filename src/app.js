@@ -15,7 +15,7 @@ app.post("/produtos", criarProduto);
 
 app.get("/produtos/:id", getProdutoById);
 
-app.get("produtos/:id", editarProduto);
+app.put("/produtos/:id", editarProduto);
 
 
 export default app;
