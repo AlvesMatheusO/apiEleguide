@@ -1,40 +1,65 @@
     import produto from "../models/produto.js";
 
+    class ProdutoController {
 
-    export const getProdutos = async (req, res) => {
-        const listProdutos = await produto.find({});
-        res.status(200).json(listProdutos);
+
+      static async getProdutos (req, res)  {
+        try {
+          const listProdutos = await produto.find({});
+          res.status(200).json(listProdutos); 
+        } catch (erro) {
+          res.status(500).json({message: `${erro.message} - Falha na requisição`});
+        }        
       };
 
-      export const criarProduto = (req, res) => {
-        const novoProduto = req.body;
-        produtos.push(novoProduto);
-        res.status(201).json({ message: "Produto cadastrado com sucesso", novoProduto });
-      };
-
-      export const editarProduto = (req, res) => {
-
-        const index = searchProduto(req.params.id);
-        produtos[index].nome = req.body.nome;
-        produtos[index].descricao = req.body.descricao;
-        produtos[index].preco = req.body.preco;
-        produtos[index].foto = req.body.foto;
-        res.status(200).json(produtos);
-
-
-    };
-
-      export const getProdutoById = (req, res) => {
-        const index = searchProduto(req.params.id);
-        res.status(200).json(produtos[index]);
-        };
-
-        export const deleteProduto = (req, res) => {
-          const index = searchProduto(req.params.id);
-          produtos.splice(index, 1);
-          res.status(200).send("Livro removido com sucesso");
-
+      static async getProdutoById (req, res)  {
+        try {
+          const id = req.params.id;
+          const listarProduto = await produto.findById(id);
+          res.status(200).json(listarProduto);      
+        } catch (error) {
+          res.status(500).json({message: `${erro.message} - Falha na requisição do Produto Pesquisado`}); 
         }
+    
+        };
+    
+    
+      static async criarProduto (req, res) {  
+        try { 
+          const novoProduto = await produto.create(req.body);
+          res.status(201).json({ message: "Produto cadastrado com sucesso", produto: novoProduto });
+        } catch(erro){
+          res.status(500).json({message:`${erro.message} - falha ao cadastrar Produto`});
+        }
+       
+      };
+
+      static async editarProduto (req, res)  {
+        try {
+          const id = req.params.id;
+          await produto.findByIdAndUpdate(id, req.body);
+          res.status(200).json({ message: "Produto Atualizado" });
+        } catch (error) {
+          res.status(500).json({message:`${erro.message} - falha ao Atualizar Produto`});
+        }
+  };
+
+
+
+      static async deleteProduto (req, res) {
+        try {
+          const id = req.params.id;
+          await produto.findByIdAndDelete(id, req.body);
+          res.status(200).json({ message: "Produto Deletado com sucesso" });
+        } catch (error) {
+          res.status(500).json({message:`${erro.message} - falha ao Deletar Produto`});
+        }
+      }
+
+  }
+
+  export default ProdutoController;
+
 
 
       

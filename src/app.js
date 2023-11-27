@@ -1,7 +1,6 @@
 import express  from "express";
 import connectDatabase from "./config/dbconnect.js";
-import { getProdutos, criarProduto, editarProduto, getProdutoById, deleteProduto } from "./controllers/produtoController.js";
-
+import routes from "./routes/index.js";
 
 
 const connection = await connectDatabase();
@@ -15,23 +14,8 @@ connection.once("open", () => {
 }); 
 
 const app = express();
-app.use(express.json());
 
-app.get("/", (req, res) => {
-    res.status(200).send("Eleguide");
-});
-
-app.get("/produtos", getProdutos);
-
-app.post("/produtos", criarProduto);
-
-app.get("/produtos/:id", getProdutoById);
-
-app.put("/produtos/:id", editarProduto);
-
-app.delete("/produtos/:id", deleteProduto); 
-
-
+routes(app);
 
 
 export default app;
